@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор случайных чисел</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #e9f7fe;
+        }
+        .stats {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #eaf7ff;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        @media (max-width: 600px) {
+            .controls {
+                flex-direction: column;
+            }
+            button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Генератор случайных чисел</h1>
+        
+        <div class="controls">
+            <button id="generateBtn">Сгенерировать 30 чисел</button>
+            <button id="addBtn">Добавить число</button>
+            <button id="clearBtn">Очистить таблицу</button>
+        </div>
+        
+        <table id="numbersTable">
+            <thead>
+                <tr>
+                    <th>Индекс</th>
+                    <th>Число</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Сюда будут добавляться числа -->
+            </tbody>
+        </table>
+        
+        <div class="stats" id="stats">
+            <strong>Статистика:</strong> Всего чисел: <span id="count">0</span> | 
+            Сумма: <span id="sum">0</span> | 
+            Среднее: <span id="average">0</span>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>Решение задания по JavaScript DOM - Генерация случайных чисел</p>
+    </div>
+
+    <script>
+        // Массив для хранения случайных чисел
+        let randomNumbers = [];
+        
+        // Функция для генерации случайного числа от 0 до 99
+        function generateRandomNumber() {
+            return Math.floor(Math.random() * 100);
+        }
+        
+        // Функция для генерации 30 случайных чисел
+        function generateRandomNumbers() {
+            randomNumbers = [];
+            for (let i = 0; i < 30; i++) {
+                randomNumbers.push(generateRandomNumber());
+            }
+            updateTable();
+            updateStats();
+        }
+        
+        // Функция для добавления одного случайного числа
+        function addRandomNumber() {
+            randomNumbers.push(generateRandomNumber());
+            updateTable();
+            updateStats();
+        }
+        
+        // Функция для очистки таблицы
+        function clearTable() {
+            randomNumbers = [];
+            updateTable();
+            updateStats();
+        }
+        
+        // Функция для обновления таблицы
+        function updateTable() {
+            const tableBody = document.querySelector('#numbersTable tbody');
+            tableBody.innerHTML = '';
+            
+            randomNumbers.forEach((number, index) => {
+                const row = document.createElement('tr');
+                
+                const indexCell = document.createElement('td');
+                indexCell.textContent = index + 1;
+                
+                const numberCell = document.createElement('td');
+                numberCell.textContent = number;
+                
+                row.appendChild(indexCell);
+                row.appendChild(numberCell);
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Функция для обновления статистики
+        function updateStats() {
+            const countElement = document.getElementById('count');
+            const sumElement = document.getElementById('sum');
+            const averageElement = document.getElementById('average');
+            
+            countElement.textContent = randomNumbers.length;
+            
+            const sum = randomNumbers.reduce((acc, num) => acc + num, 0);
+            sumElement.textContent = sum;
+            
+            const average = randomNumbers.length > 0 ? (sum / randomNumbers.length).toFixed(2) : 0;
+            averageElement.textContent = average;
+        }
+        
+        // Назначение обработчиков событий для кнопок
+        document.getElementById('generateBtn').addEventListener('click', generateRandomNumbers);
+        document.getElementById('addBtn').addEventListener('click', addRandomNumber);
+        document.getElementById('clearBtn').addEventListener('click', clearTable);
+        
+        // Генерация начального набора чисел при загрузке страницы
+        window.addEventListener('load', generateRandomNumbers);
+    </script>
+</body>
+</html>
